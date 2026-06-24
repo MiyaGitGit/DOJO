@@ -1,0 +1,9 @@
+{
+  "name": "miyagi",
+  "version": "1.0.0",
+  "description": "Outils et compétences pour Miyagi — analyse d'appels d'offres, gestion du changement, transformation numérique et ERP",
+  "author": {
+    "name": "Miyagi",
+    "email": "jlarose72@gmail.com"
+  }
+}

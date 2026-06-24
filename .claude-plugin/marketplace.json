@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "miyagi-plugins",
+  "description": "Marketplace de plugins pour Miyagi — gestion du changement, transformation numérique et ERP",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Miyagi",
+    "email": "jlarose72@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "miyagi",
+      "description": "Outils et compétences pour Miyagi — analyse d'appels d'offres, gestion du changement, transformation numérique et ERP",
+      "source": "./plugins/miyagi"
+    }
+  ]
+}
