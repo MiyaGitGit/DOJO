@@ -34,11 +34,22 @@ Pour la date limite de soumission, fournis-la sous deux formes : "date_limite" e
 
 ## Clauses légales
 
-Passe en revue les clauses contractuelles et légales du document. Pour chaque clause identifiée : titre/type, résumé clair en langage accessible (pas de jargon juridique inutile), niveau de risque pour le soumissionnaire (Faible / Modéré / Élevé) avec explication.
+Rédige cette section comme le ferait un avocat d'affaires québécois avec 20 ans d'expérience, mais avec le souci pédagogique de s'adresser à des gestionnaires non juristes : raisonnement juridique solide et contextualisé au Québec, mots simples, exemples concrets, sans jargon superflu.
 
-Types de clauses à chercher (sans s'y limiter) : conditions de paiement, pénalités (retards, non-conformité, dommages liquidés), assurances requises, propriété intellectuelle, confidentialité, responsabilité et indemnisation, résiliation, sous-traitance, conflits d'intérêts, langue de travail, loi applicable, cession, force majeure.
+Procède en deux passes pour garantir l'exhaustivité :
+1. Passe de lecture intégrale : examine le document au complet (corps du texte, annexes, conditions générales, bordereau de soumission), les clauses pouvant être dispersées dans plusieurs sections.
+2. Passe de validation par catégorie : reprends chacun des 13 types de clauses ci-dessous et confirme explicitement, pour chacun, s'il est présent, absent, ou partiellement traité. Une catégorie absente doit tout de même apparaître dans clauses_legales (reference_citation: "Non abordée dans le document") plutôt que d'être omise — le lecteur doit pouvoir se fier au rapport sans devoir relire l'AO en entier.
 
-Termine par un résumé synthétique des risques légaux : niveau de risque contractuel global et points nécessitant une attention particulière ou un avis juridique.
+Les 13 types de clauses à couvrir systématiquement : conditions de paiement, pénalités (retards, non-conformité, dommages liquidés), assurances requises, propriété intellectuelle, confidentialité, responsabilité et indemnisation, résiliation, sous-traitance, conflits d'intérêts, langue de travail, loi applicable, cession, force majeure.
+
+Pour chaque clause (présente, absente ou partielle) :
+- titre : un des 13 types ci-dessus (ou un type additionnel pertinent)
+- reference_citation : numéro de section/article/clause et page si paginé, avec une courte citation entre guillemets du passage clé ; "Non abordée dans le document" si absente
+- resume : ce que la clause prévoit concrètement, ce qu'elle signifie en pratique pour Miyagi dans ce mandat précis, et si elle est standard dans les contrats publics au Québec, plus contraignante que la norme du marché, ou encadrée par une disposition impérative (Code civil du Québec, Loi sur les contrats des organismes publics en matière de technologies de l'information, Charte de la langue française) indépendamment du libellé de l'AO
+- niveau_risque : Faible / Modéré / Élevé pour le soumissionnaire, avec le raisonnement intégré au résumé
+- recommandation : action concrète (ex. poser une question écrite avant la date de fermeture des questions, négocier un plafond de responsabilité, accepter tel quel, consulter un conseiller juridique externe avant soumission)
+
+Dans resume_risques_legaux : un paragraphe synthétique du niveau de risque contractuel global, qui confirme explicitement que les 13 catégories ont été passées en revue (en précisant le nombre de clauses identifiées, absentes, ou nécessitant une attention particulière), et qui signale les points justifiant un avis juridique externe avant soumission.
 
 ## Recommandation
 
@@ -112,8 +123,13 @@ export const ANALYSE_TOOL = {
           type: 'object',
           properties: {
             titre: { type: 'string' },
+            reference_citation: {
+              type: 'string',
+              description: 'Référence précise (section/article/clause, page si paginé) et courte citation entre guillemets ; "Non abordée dans le document" si la clause est absente',
+            },
             resume: { type: 'string' },
             niveau_risque: { type: 'string', enum: ['Faible', 'Modéré', 'Élevé'] },
+            recommandation: { type: 'string' },
           },
         },
       },

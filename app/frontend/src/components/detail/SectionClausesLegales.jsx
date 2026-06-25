@@ -13,7 +13,9 @@ export default function SectionClausesLegales({ appelOffre }) {
           <thead>
             <tr>
               <th>Clause</th>
+              <th>Référence et citation</th>
               <th>Résumé</th>
+              <th>Recommandation</th>
               <th>Risque</th>
             </tr>
           </thead>
@@ -23,7 +25,9 @@ export default function SectionClausesLegales({ appelOffre }) {
               return (
                 <tr key={index}>
                   <td>{clause.titre}</td>
+                  <td>{clause.reference_citation ?? 'Non précisé'}</td>
                   <td>{clause.resume}</td>
+                  <td>{clause.recommandation ?? 'Non précisé'}</td>
                   <td>
                     <Badge texte={clause.niveau_risque} fond={couleurs.fond} couleurTexte={couleurs.texte} />
                   </td>
