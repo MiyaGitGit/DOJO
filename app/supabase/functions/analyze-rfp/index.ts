@@ -21,14 +21,34 @@ const CLAUDE_MODEL = 'claude-sonnet-4-6'
 
 const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY })
 
+// Appelée depuis le frontend web (origine différente) : le navigateur envoie une
+// requête preflight OPTIONS avant le POST réel, qui doit recevoir ces en-têtes
+// pour ne pas être bloquée par CORS. Sans ça, le préflight échoue silencieusement
+// côté navigateur (la requête réelle n'est jamais envoyée).
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+}
+
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: CORS_HEADERS })
+  }
+
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Méthode non autorisée' }), { status: 405 })
+    return new Response(JSON.stringify({ error: 'Méthode non autorisée' }), {
+      status: 405,
+      headers: CORS_HEADERS,
+    })
   }
 
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) {
-    return new Response(JSON.stringify({ error: 'En-tête Authorization manquant' }), { status: 401 })
+    return new Response(JSON.stringify({ error: 'En-tête Authorization manquant' }), {
+      status: 401,
+      headers: CORS_HEADERS,
+    })
   }
 
   // Client lié au JWT de l'appelant : les policies RLS s'appliquent normalement.
@@ -46,7 +66,7 @@ Deno.serve(async (req: Request) => {
   } catch {
     return new Response(
       JSON.stringify({ error: 'Payload invalide, attendu { appel_offre_id: string }' }),
-      { status: 400 },
+      { status: 400, headers: CORS_HEADERS },
     )
   }
 
@@ -59,7 +79,7 @@ Deno.serve(async (req: Request) => {
   if (fetchError || !appelOffre) {
     return new Response(
       JSON.stringify({ error: "Appel d'offres introuvable ou accès refusé" }),
-      { status: 404 },
+      { status: 404, headers: CORS_HEADERS },
     )
   }
 
@@ -138,7 +158,7 @@ Deno.serve(async (req: Request) => {
     if (updateError) throw updateError
 
     return new Response(JSON.stringify({ ok: true, appel_offre_id: appelOffreId }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
     })
   } catch (error) {
     const messageErreur = error instanceof Error ? error.message : 'Erreur inconnue'
@@ -150,7 +170,7 @@ Deno.serve(async (req: Request) => {
 
     return new Response(JSON.stringify({ error: messageErreur }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
     })
   }
 })
