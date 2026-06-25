@@ -102,7 +102,9 @@ Deno.serve(async (req: Request) => {
 
     const message = await anthropic.messages.create({
       model: CLAUDE_MODEL,
-      max_tokens: 4096,
+      // L'analyse exhaustive des 13 catégories de clauses légales (5 champs chacune)
+      // dépasse régulièrement 4096 tokens en sortie ; coupait l'analyse en cours de génération.
+      max_tokens: 8192,
       system: SYSTEM_PROMPT,
       tools: [ANALYSE_TOOL],
       tool_choice: { type: 'tool', name: ANALYSE_TOOL.name },
@@ -122,6 +124,12 @@ Deno.serve(async (req: Request) => {
         },
       ],
     })
+
+    if (message.stop_reason === 'max_tokens') {
+      throw new Error(
+        "L'analyse a été interrompue avant la fin (limite de tokens atteinte) : le document est probablement trop volumineux ou complexe, réessaie",
+      )
+    }
 
     const toolUse = message.content.find(
       (block): block is Anthropic.ToolUseBlock => block.type === 'tool_use',
