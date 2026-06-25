@@ -14,8 +14,11 @@ export default function NavBar() {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-marque">
-        DOJO
+      <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+        <img src="/miyagi-logo.png" alt="Miyagi" style={{ height: '28px', display: 'block' }} />
+        <span className="navbar-marque" style={{ marginLeft: '1rem' }}>
+          DOJO
+        </span>
       </Link>
       <div className="navbar-actions">
         <Link to="/upload">Nouvel AO</Link>
