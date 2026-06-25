@@ -1,0 +1,241 @@
+:root {
+  --miyagi-orange-1: #f9ae00;
+  --miyagi-orange-2: #ff7300;
+  --miyagi-marron: #544341;
+  --miyagi-blanc: #ffffff;
+  --gris-clair: #f4f2f1;
+  --gris-moyen: #9b9492;
+  --gris-bordure: #e3dfdd;
+
+  --couleur-succes: #2e9e5b;
+  --couleur-attention: #ff7300;
+  --couleur-neutre: #9b9492;
+  --couleur-danger: #c0392b;
+
+  --rayon-pilule: 999px;
+  --rayon-carte: 16px;
+  --ombre-carte: 0 2px 10px rgba(84, 67, 65, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: var(--miyagi-marron);
+  background: var(--gris-clair);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.card {
+  background: var(--miyagi-blanc);
+  border-radius: var(--rayon-carte);
+  box-shadow: var(--ombre-carte);
+  padding: 1.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: var(--rayon-pilule);
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--miyagi-orange-1), var(--miyagi-orange-2));
+  color: var(--miyagi-blanc);
+}
+
+.btn-secondary {
+  background: var(--gris-clair);
+  color: var(--miyagi-marron);
+  border: 1px solid var(--gris-bordure);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--gris-bordure);
+  font-size: 0.95rem;
+  background: var(--miyagi-blanc);
+  color: var(--miyagi-marron);
+}
+
+.input-field:focus {
+  outline: 2px solid var(--miyagi-orange-1);
+}
+
+.champ-label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.pilule {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--rayon-pilule);
+  padding: 0.25rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.navbar {
+  background: var(--miyagi-marron);
+  color: var(--miyagi-blanc);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+}
+
+.navbar a {
+  color: var(--miyagi-blanc);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar-marque {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableau th,
+.tableau td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--gris-bordure);
+  font-size: 0.9rem;
+}
+
+.tableau th {
+  color: var(--gris-moyen);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tableau tr.ligne-cliquable {
+  cursor: pointer;
+}
+
+.tableau tr.ligne-cliquable:hover {
+  background: var(--gris-clair);
+}
+
+.spinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--gris-bordure);
+  border-top-color: var(--miyagi-orange-2);
+  border-radius: 50%;
+  animation: tourner 0.7s linear infinite;
+}
+
+.spinner-grand {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 3px;
+}
+
+@keyframes tourner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.etat-vide {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--gris-moyen);
+}
+
+.banniere-erreur {
+  background: #fbeaea;
+  color: var(--couleur-danger);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.encadre-recommandation {
+  background: var(--gris-clair);
+  border-left: 4px solid var(--miyagi-orange-2);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.section-detail {
+  margin-bottom: 2rem;
+}
+
+.zone-depot {
+  border: 2px dashed var(--gris-bordure);
+  border-radius: var(--rayon-carte);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--gris-moyen);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.zone-depot.survol {
+  border-color: var(--miyagi-orange-2);
+  background: #fff8ea;
+}
