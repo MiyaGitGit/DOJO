@@ -15,7 +15,17 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-        <img src="/miyagi-logo.png" alt="Miyagi" style={{ height: '28px', display: 'block' }} />
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            background: 'var(--miyagi-blanc)',
+            borderRadius: 'var(--rayon-pilule)',
+            padding: '0.4rem 0.85rem',
+          }}
+        >
+          <img src="/miyagi-logo.png" alt="Miyagi" style={{ height: '20px', display: 'block' }} />
+        </span>
         <span className="navbar-marque" style={{ marginLeft: '1rem' }}>
           DOJO
         </span>
