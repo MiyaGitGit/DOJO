@@ -60,7 +60,18 @@ export default function UploadPage() {
       const { error: erreurInvoke } = await supabase.functions.invoke('analyze-rfp', {
         body: { appel_offre_id: ligne.id },
       })
-      if (erreurInvoke) throw new Error("Le lancement de l'analyse a échoué : " + erreurInvoke.message)
+      if (erreurInvoke) {
+        // erreurInvoke.message est un message générique de supabase-js ("non-2xx status
+        // code") ; le vrai message d'erreur est dans le corps JSON de la réponse HTTP.
+        let messageReel = erreurInvoke.message
+        try {
+          const corps = await erreurInvoke.context.json()
+          if (corps?.error) messageReel = corps.error
+        } catch {
+          // corps non lisible en JSON : on garde le message générique
+        }
+        throw new Error("Le lancement de l'analyse a échoué : " + messageReel)
+      }
 
       navigate(`/appels-offres/${ligne.id}`)
     } catch (erreurAttrapee) {
