@@ -1,16 +1,21 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 import { useAppelsOffres } from '../hooks/useAppelsOffres'
 import FiltresDashboard from '../components/dashboard/FiltresDashboard'
 import AppelOffreRow from '../components/dashboard/AppelOffreRow'
+import BarreActionsSelection from '../components/dashboard/BarreActionsSelection'
 import EmptyState from '../components/ui/EmptyState'
 import ErrorBanner from '../components/ui/ErrorBanner'
 import Spinner from '../components/ui/Spinner'
 
 export default function DashboardPage() {
-  const { appelsOffres, chargement, erreur } = useAppelsOffres()
+  const { appelsOffres, chargement, erreur, refetch } = useAppelsOffres()
   const [filtrePertinence, setFiltrePertinence] = useState('toutes')
   const [tri, setTri] = useState('created_at')
+  const [selection, setSelection] = useState(new Set())
+  const [actionEnCours, setActionEnCours] = useState(false)
+  const [erreurAction, setErreurAction] = useState(null)
 
   const appelsOffresAffiches = useMemo(() => {
     let resultat = appelsOffres
@@ -26,6 +31,71 @@ export default function DashboardPage() {
     })
   }, [appelsOffres, filtrePertinence, tri])
 
+  function changerSelection(id, selectionne) {
+    setSelection((precedent) => {
+      const nouveau = new Set(precedent)
+      if (selectionne) nouveau.add(id)
+      else nouveau.delete(id)
+      return nouveau
+    })
+  }
+
+  function changerSelectionTout(selectionne) {
+    setSelection(selectionne ? new Set(appelsOffresAffiches.map((ao) => ao.id)) : new Set())
+  }
+
+  async function handleSupprimer() {
+    if (!window.confirm(`Supprimer définitivement ${selection.size} appel(s) d'offres ?`)) return
+
+    setActionEnCours(true)
+    setErreurAction(null)
+    try {
+      const idsSelectionnes = [...selection]
+      const cheminsFichiers = appelsOffres
+        .filter((ao) => idsSelectionnes.includes(ao.id))
+        .map((ao) => ao.storage_path)
+
+      if (cheminsFichiers.length > 0) {
+        // Best-effort : un fichier déjà absent du bucket ne doit pas empêcher la suppression des lignes.
+        await supabase.storage.from('appels-offres').remove(cheminsFichiers)
+      }
+
+      const { error } = await supabase.from('appels_offres').delete().in('id', idsSelectionnes)
+      if (error) throw new Error(error.message)
+
+      setSelection(new Set())
+      await refetch()
+    } catch (erreurAttrapee) {
+      setErreurAction('La suppression a échoué : ' + erreurAttrapee.message)
+    } finally {
+      setActionEnCours(false)
+    }
+  }
+
+  async function handleMarquerErreur() {
+    if (!window.confirm(`Marquer ${selection.size} appel(s) d'offres comme en erreur ?`)) return
+
+    setActionEnCours(true)
+    setErreurAction(null)
+    try {
+      const { error } = await supabase
+        .from('appels_offres')
+        .update({ statut: 'erreur', erreur_message: 'Analyse arrêtée manuellement' })
+        .in('id', [...selection])
+      if (error) throw new Error(error.message)
+
+      setSelection(new Set())
+      await refetch()
+    } catch (erreurAttrapee) {
+      setErreurAction("L'action a échoué : " + erreurAttrapee.message)
+    } finally {
+      setActionEnCours(false)
+    }
+  }
+
+  const touteSelectionnee =
+    appelsOffresAffiches.length > 0 && appelsOffresAffiches.every((ao) => selection.has(ao.id))
+
   return (
     <div className="page-container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -36,6 +106,7 @@ export default function DashboardPage() {
       </div>
 
       <ErrorBanner message={erreur} />
+      <ErrorBanner message={erreurAction} />
 
       {chargement ? (
         <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -51,9 +122,22 @@ export default function DashboardPage() {
             tri={tri}
             onChangerTri={setTri}
           />
+          <BarreActionsSelection
+            nombreSelectionnes={selection.size}
+            onSupprimer={handleSupprimer}
+            onMarquerErreur={handleMarquerErreur}
+            enCours={actionEnCours}
+          />
           <table className="tableau">
             <thead>
               <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={touteSelectionnee}
+                    onChange={(e) => changerSelectionTout(e.target.checked)}
+                  />
+                </th>
                 <th>Organisme</th>
                 <th>Titre</th>
                 <th>Statut</th>
@@ -63,7 +147,12 @@ export default function DashboardPage() {
             </thead>
             <tbody>
               {appelsOffresAffiches.map((appelOffre) => (
-                <AppelOffreRow key={appelOffre.id} appelOffre={appelOffre} />
+                <AppelOffreRow
+                  key={appelOffre.id}
+                  appelOffre={appelOffre}
+                  selectionne={selection.has(appelOffre.id)}
+                  onChangerSelection={changerSelection}
+                />
               ))}
             </tbody>
           </table>
