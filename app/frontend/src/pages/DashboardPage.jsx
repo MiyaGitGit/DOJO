@@ -16,6 +16,11 @@ export default function DashboardPage() {
   const [selection, setSelection] = useState(new Set())
   const [actionEnCours, setActionEnCours] = useState(false)
   const [erreurAction, setErreurAction] = useState(null)
+  const [genererPdfEnCours, setGenererPdfEnCours] = useState(false)
+
+  const appelOffreSelectionne =
+    selection.size === 1 ? appelsOffres.find((ao) => selection.has(ao.id)) : null
+  const genererPdfPossible = appelOffreSelectionne?.statut === 'analyse_terminee'
 
   const appelsOffresAffiches = useMemo(() => {
     let resultat = appelsOffres
@@ -93,6 +98,21 @@ export default function DashboardPage() {
     }
   }
 
+  async function handleGenererPdf() {
+    if (!appelOffreSelectionne) return
+
+    setGenererPdfEnCours(true)
+    setErreurAction(null)
+    try {
+      const { genererPdfAnalyse } = await import('../utils/genererPdfAnalyse')
+      await genererPdfAnalyse(appelOffreSelectionne)
+    } catch (erreurAttrapee) {
+      setErreurAction('La génération du PDF a échoué : ' + erreurAttrapee.message)
+    } finally {
+      setGenererPdfEnCours(false)
+    }
+  }
+
   const touteSelectionnee =
     appelsOffresAffiches.length > 0 && appelsOffresAffiches.every((ao) => selection.has(ao.id))
 
@@ -126,6 +146,9 @@ export default function DashboardPage() {
             nombreSelectionnes={selection.size}
             onSupprimer={handleSupprimer}
             onMarquerErreur={handleMarquerErreur}
+            onGenererPdf={handleGenererPdf}
+            genererPdfPossible={genererPdfPossible}
+            genererPdfEnCours={genererPdfEnCours}
             enCours={actionEnCours}
           />
           <table className="tableau">
