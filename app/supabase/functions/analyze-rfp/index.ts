@@ -8,7 +8,16 @@
 // Appelée avec le JWT de l'utilisateur (jamais la service role) afin que les
 // policies RLS s'appliquent. Secret requis : ANTHROPIC_API_KEY
 // (supabase secrets set ANTHROPIC_API_KEY=...).
+//
+// L'analyse Claude (document PDF + sortie exhaustive sur les clauses légales)
+// peut prendre plus d'une minute, au-delà du temps d'exécution synchrone alloué
+// par l'Edge Function (constaté : shutdown "WallClockTime" en production). La
+// fonction répond donc immédiatement après avoir lancé l'analyse, et poursuit
+// le traitement en tâche de fond via EdgeRuntime.waitUntil(). Le frontend suit
+// la progression en observant le changement de `statut` en base (polling),
+// jamais la réponse HTTP de l'invocation elle-même.
 
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import Anthropic from 'npm:@anthropic-ai/sdk@0.32'
 import { SYSTEM_PROMPT, ANALYSE_TOOL } from './prompt.ts'
@@ -88,11 +97,23 @@ Deno.serve(async (req: Request) => {
     .update({ statut: 'analyse_en_cours', erreur_message: null })
     .eq('id', appelOffreId)
 
+  EdgeRuntime.waitUntil(effectuerAnalyse(supabase, appelOffre.storage_path, appelOffreId))
+
+  return new Response(JSON.stringify({ ok: true, appel_offre_id: appelOffreId }), {
+    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+  })
+})
+
+async function effectuerAnalyse(
+  supabase: ReturnType<typeof createClient>,
+  storagePath: string,
+  appelOffreId: string,
+) {
   try {
     const { data: fichier, error: downloadError } = await supabase
       .storage
       .from('appels-offres')
-      .download(appelOffre.storage_path)
+      .download(storagePath)
 
     if (downloadError || !fichier) {
       throw new Error(`Téléchargement du fichier impossible : ${downloadError?.message ?? 'inconnu'}`)
@@ -164,10 +185,6 @@ Deno.serve(async (req: Request) => {
       .eq('id', appelOffreId)
 
     if (updateError) throw updateError
-
-    return new Response(JSON.stringify({ ok: true, appel_offre_id: appelOffreId }), {
-      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-    })
   } catch (error) {
     const messageErreur = error instanceof Error ? error.message : 'Erreur inconnue'
 
@@ -175,13 +192,8 @@ Deno.serve(async (req: Request) => {
       .from('appels_offres')
       .update({ statut: 'erreur', erreur_message: messageErreur })
       .eq('id', appelOffreId)
-
-    return new Response(JSON.stringify({ error: messageErreur }), {
-      status: 500,
-      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-    })
   }
-})
+}
 
 function parseDateIso(value: unknown): string | null {
   if (typeof value !== 'string' || value.trim() === '') return null
