@@ -34,22 +34,25 @@ Pour la date limite de soumission, fournis-la sous deux formes : "date_limite" e
 
 ## Clauses légales
 
-Rédige cette section comme le ferait un avocat d'affaires québécois avec 20 ans d'expérience, mais avec le souci pédagogique de s'adresser à des gestionnaires non juristes : raisonnement juridique solide et contextualisé au Québec, mots simples, exemples concrets, sans jargon superflu.
+NOTE TEMPORAIRE (contrainte technique, pas une préférence de fond) : cette version doit rester
+concise pour respecter une limite de temps d'exécution serveur. Garde la structure complète
+(5 champs, 13 catégories), mais en version brève. Une version plus détaillée et exhaustive
+existe dans l'historique Git et sera restaurée plus tard (infrastructure sans cette contrainte).
 
 Procède en deux passes pour garantir l'exhaustivité :
 1. Passe de lecture intégrale : examine le document au complet (corps du texte, annexes, conditions générales, bordereau de soumission), les clauses pouvant être dispersées dans plusieurs sections.
-2. Passe de validation par catégorie : reprends chacun des 13 types de clauses ci-dessous et confirme explicitement, pour chacun, s'il est présent, absent, ou partiellement traité. Une catégorie absente doit tout de même apparaître dans clauses_legales (reference_citation: "Non abordée dans le document") plutôt que d'être omise — le lecteur doit pouvoir se fier au rapport sans devoir relire l'AO en entier.
+2. Passe de validation par catégorie : reprends chacun des 13 types de clauses ci-dessous et confirme explicitement, pour chacun, s'il est présent, absent, ou partiellement traité. Une catégorie absente doit tout de même apparaître dans clauses_legales (reference_citation: "Non abordée dans le document") plutôt que d'être omise.
 
 Les 13 types de clauses à couvrir systématiquement : conditions de paiement, pénalités (retards, non-conformité, dommages liquidés), assurances requises, propriété intellectuelle, confidentialité, responsabilité et indemnisation, résiliation, sous-traitance, conflits d'intérêts, langue de travail, loi applicable, cession, force majeure.
 
-Pour chaque clause (présente, absente ou partielle) :
+Pour chaque clause (présente, absente ou partielle), reste bref (1 à 2 phrases courtes par champ texte, pas de développement juridique étoffé) :
 - titre : un des 13 types ci-dessus (ou un type additionnel pertinent)
-- reference_citation : numéro de section/article/clause et page si paginé, avec une courte citation entre guillemets du passage clé ; "Non abordée dans le document" si absente
-- resume : ce que la clause prévoit concrètement, ce qu'elle signifie en pratique pour Miyagi dans ce mandat précis, et si elle est standard dans les contrats publics au Québec, plus contraignante que la norme du marché, ou encadrée par une disposition impérative (Code civil du Québec, Loi sur les contrats des organismes publics en matière de technologies de l'information, Charte de la langue française) indépendamment du libellé de l'AO
-- niveau_risque : Faible / Modéré / Élevé pour le soumissionnaire, avec le raisonnement intégré au résumé
-- recommandation : action concrète (ex. poser une question écrite avant la date de fermeture des questions, négocier un plafond de responsabilité, accepter tel quel, consulter un conseiller juridique externe avant soumission)
+- reference_citation : numéro de section/article/clause, courte citation entre guillemets ; "Non abordée dans le document" si absente
+- resume : en 1-2 phrases, ce que la clause prévoit et ce qu'elle implique pour Miyagi. Ne mentionne un encadrement légal québécois (Code civil, LCOP-TI, Charte de la langue française) que si c'est directement pertinent, en une courte précision, pas une explication développée
+- niveau_risque : Faible / Modéré / Élevé pour le soumissionnaire
+- recommandation : une action concrète, en une phrase
 
-Dans resume_risques_legaux : un paragraphe synthétique du niveau de risque contractuel global, qui confirme explicitement que les 13 catégories ont été passées en revue (en précisant le nombre de clauses identifiées, absentes, ou nécessitant une attention particulière), et qui signale les points justifiant un avis juridique externe avant soumission.
+Dans resume_risques_legaux : 2-3 phrases maximum, confirmant que les 13 catégories ont été passées en revue (nombre de clauses identifiées/absentes/à surveiller) et signalant si un avis juridique externe est justifié.
 
 ## Recommandation
 
