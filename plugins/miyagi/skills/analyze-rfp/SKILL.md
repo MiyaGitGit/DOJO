@@ -28,6 +28,15 @@ Leur expertise distinctive porte sur :
 
 Les domaines de compétence connexes incluent : stratégie d'adoption, communication organisationnelle, analyse d'impacts, préparation des utilisateurs, soutien post-implantation, coaching de gestionnaires, conception pédagogique, évaluation de la maturité organisationnelle.
 
+### Savoir-faire technique réel en création de contenus elearning
+
+Quand un AO comporte des exigences techniques précises en elearning (outils d'auteurage SCORM/xAPI,
+production multimédia, intégration LMS, accessibilité WCAG), consulte
+[`savoir-faire-elearning-miyagi.md`](savoir-faire-elearning-miyagi.md) dans ce même dossier avant de
+conclure sur l'adéquation technique. Ce document synthétise les capacités réellement démontrées par
+Miyagi (outils utilisés, types de livrables, lacunes connues) à partir de l'historique des mandats
+réalisés, plutôt que de présumer une compétence à partir du profil général ci-dessus.
+
 ## Étape 1 — Lire le document
 
 Commence par lire le document d'appel d'offres fourni par l'utilisateur. Accepte tout format : PDF, Word (.docx), ou texte brut. Si le document est un PDF volumineux, lis-le par sections en utilisant le paramètre `pages` pour couvrir l'ensemble du contenu.

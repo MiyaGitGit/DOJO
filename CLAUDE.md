@@ -50,6 +50,7 @@ Anthropic personnelle de Julien par une clé Miyagi.
 ├── plugins/miyagi/                # Plugin Claude Code (marketplace local)
 │   └── skills/
 │       ├── analyze-rfp/SKILL.md  # Analyse d'un AO (pertinence, résumé, clauses légales, recommandation)
+│       │   └── savoir-faire-elearning-miyagi.md  # Référence : capacités techniques elearning réelles (synthèse de l'historique Chat "Mission accomplie")
 │       └── docx/SKILL.md         # Export Word (.docx) d'un contenu structuré, généré en XML pur (pas de COM/Word)
 ├── .claude-plugin/marketplace.json
 └── presentation/                  # Présentation de lancement du projet
