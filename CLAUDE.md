@@ -16,16 +16,32 @@ DOJO est le chantier d'automatisation de l'analyse des appels d'offres (AO) publ
 
 ## Statut actuel
 
-**MVP Phase 1** : une application web (Supabase + Edge Function Claude) qui digitalise l'analyse
-d'un AO déposé en PDF — pertinence, résumé, clauses légales, recommandation — avec historique
-consultable. Voir [`app/README.md`](app/README.md) pour l'architecture technique et la mise en
-place.
+**Phase 1 complétée** : une application web (Supabase + Edge Function Claude) qui digitalise
+l'analyse d'un AO déposé en PDF — pertinence, résumé, clauses légales, recommandation — avec
+historique consultable. Voir [`app/README.md`](app/README.md) pour l'architecture technique et la
+mise en place.
 
-Phases futures (hors scope du MVP) :
-- **Phase 2** : déclencheur automatisé de transfert vers Wrike pour les AO très pertinents
+**Phase 2 en cours** : connexion au formulaire Miyagi — transfert des données de l'AO vers Wrike,
+déclenché manuellement par un humain après lecture de l'analyse (bouton "Transférer vers Wrike" sur
+le dashboard et la page de détail). Le code est en place
+(`app/supabase/migrations/0002_wrike_transfer.sql`,
+`app/supabase/functions/transfer-to-wrike/`), mais l'appel réel à l'API Wrike attend des
+prérequis côté Miyagi : token API, ID du Blueprint AO, mapping des champs personnalisés (à obtenir
+via Martine Tessier).
+
+Phases futures (hors scope actuel) :
 - **Phase 3** : génération assistée d'une ébauche de réponse, connectée à la bibliothèque de
   documents Miyagi (profils, projets similaires, CV des consultants) déjà présente dans le Drive
   Miyagi
+- **Phase 4** : génération automatique d'offres de services à partir de l'analyse des rapports
+  issus du formulaire client et du profil du client
+
+*Note de cohérence : l'idée d'automatiser le déclencheur de transfert (décider seul qu'un AO est
+assez pertinent pour être transféré, sans relecture humaine) avait été envisagée comme « Phase 2 »
+avant l'adoption de la feuille de route actuelle (4 phases). Elle n'est plus une phase numérotée —
+la Phase 2 garde une décision humaine obligatoire, conformément à la décision du 2026-06-18 de
+conserver le déclenchement manuel. Si cette automatisation redevient pertinente un jour, ce sera un
+raffinement de la Phase 1 (qualification), pas une phase à part.*
 
 ## Origine et migration prévue vers DANIELSAN
 

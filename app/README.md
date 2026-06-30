@@ -103,7 +103,8 @@ Rien à faire maintenant, mais à garder en tête si Miyagi approuve le projet e
 - **Clé API Anthropic** : remplacer la clé personnelle de Julien par une clé Miyagi, indépendamment de toute migration (bonne pratique de toute façon dès qu'un outil passe en usage professionnel).
 - **Bibliothèque de documents Miyagi (Phase 3 future, hors scope MVP)** : cette bibliothèque (profils, projets similaires, CV des consultants) vit déjà dans le Drive Miyagi. Au moment de construire la Phase 3 (rédaction assistée des réponses), la connexion directe à ce Drive plutôt que la duplication des documents dans Supabase sera probablement le bon choix. À trancher à ce moment, pas maintenant.
 
-## Prochaines phases (hors scope de ce MVP)
+## Suite du projet (au-delà de ce MVP)
 
-- **Phase 2** : automatiser le déclencheur de transfert vers Wrike pour les AO jugés très pertinents (aujourd'hui décision manuelle, volontairement, pour accumuler des cas réels et calibrer un seuil de confiance fiable)
+- **Phase 2 (en cours)** : connexion au formulaire Miyagi — transfert des données de l'AO vers Wrike, déclenché manuellement par un humain après lecture de l'analyse (bouton "Transférer vers Wrike" sur le dashboard et la page de détail). Le code est en place (`supabase/migrations/0002_wrike_transfer.sql`, `supabase/functions/transfer-to-wrike/`), mais l'appel réel à l'API Wrike attend des prérequis côté Miyagi : token API, ID du Blueprint AO, mapping des champs personnalisés (à obtenir via Martine Tessier).
 - **Phase 3** : génération assistée d'une ébauche de réponse pour 100% des AO transférés dans Wrike
+- **Phase 4** : génération automatique d'offres de services à partir de l'analyse des rapports issus du formulaire client et du profil du client

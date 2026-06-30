@@ -1,4 +1,4 @@
-// Edge Function "transfer-to-wrike" — Projet DOJO, Phase 4
+// Edge Function "transfer-to-wrike" — Projet DOJO, Phase 2
 //
 // Reçoit { appel_offre_id } et doit créer le projet correspondant dans Wrike, à
 // partir du Folder Blueprint Wrike déjà utilisé pour les AO (voir la présentation
