@@ -7,6 +7,9 @@ export default function BarreActionsSelection({
   onGenererPdf,
   genererPdfPossible,
   genererPdfEnCours,
+  onTransfererWrike,
+  transfererWrikePossible,
+  transfertWrikeEnCours,
   enCours,
 }) {
   if (nombreSelectionnes === 0) return null
@@ -31,6 +34,14 @@ export default function BarreActionsSelection({
         onClick={onGenererPdf}
       >
         {genererPdfEnCours ? <Spinner /> : 'Générer PDF'}
+      </button>
+      <button
+        type="button"
+        className="btn btn-secondary"
+        disabled={enCours || transfertWrikeEnCours || !transfererWrikePossible}
+        onClick={onTransfererWrike}
+      >
+        {transfertWrikeEnCours ? <Spinner /> : 'Transférer vers Wrike'}
       </button>
       <button type="button" className="btn btn-secondary" disabled={enCours} onClick={onMarquerErreur}>
         Marquer comme erreur

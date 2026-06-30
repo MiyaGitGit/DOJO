@@ -17,10 +17,13 @@ export default function DashboardPage() {
   const [actionEnCours, setActionEnCours] = useState(false)
   const [erreurAction, setErreurAction] = useState(null)
   const [genererPdfEnCours, setGenererPdfEnCours] = useState(false)
+  const [transfertWrikeEnCours, setTransfertWrikeEnCours] = useState(false)
 
   const appelOffreSelectionne =
     selection.size === 1 ? appelsOffres.find((ao) => selection.has(ao.id)) : null
   const genererPdfPossible = appelOffreSelectionne?.statut === 'analyse_terminee'
+  const transfererWrikePossible =
+    appelOffreSelectionne?.statut === 'analyse_terminee' && appelOffreSelectionne?.wrike_statut !== 'transfere'
 
   const appelsOffresAffiches = useMemo(() => {
     let resultat = appelsOffres
@@ -113,6 +116,27 @@ export default function DashboardPage() {
     }
   }
 
+  async function handleTransfererWrike() {
+    if (!appelOffreSelectionne) return
+    if (!window.confirm("Transférer cet appel d'offres vers Wrike ? Un nouveau projet sera créé dans Wrike."))
+      return
+
+    setTransfertWrikeEnCours(true)
+    setErreurAction(null)
+    try {
+      const { error } = await supabase.functions.invoke('transfer-to-wrike', {
+        body: { appel_offre_id: appelOffreSelectionne.id },
+      })
+      if (error) throw new Error(error.message)
+
+      await refetch()
+    } catch (erreurAttrapee) {
+      setErreurAction('Le transfert vers Wrike a échoué : ' + erreurAttrapee.message)
+    } finally {
+      setTransfertWrikeEnCours(false)
+    }
+  }
+
   const touteSelectionnee =
     appelsOffresAffiches.length > 0 && appelsOffresAffiches.every((ao) => selection.has(ao.id))
 
@@ -149,6 +173,9 @@ export default function DashboardPage() {
             onGenererPdf={handleGenererPdf}
             genererPdfPossible={genererPdfPossible}
             genererPdfEnCours={genererPdfEnCours}
+            onTransfererWrike={handleTransfererWrike}
+            transfererWrikePossible={transfererWrikePossible}
+            transfertWrikeEnCours={transfertWrikeEnCours}
             enCours={actionEnCours}
           />
           <table className="tableau">

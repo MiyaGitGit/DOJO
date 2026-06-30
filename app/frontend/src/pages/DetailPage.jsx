@@ -12,13 +12,24 @@ import Spinner from '../components/ui/Spinner'
 
 export default function DetailPage() {
   const { id } = useParams()
-  const { appelOffre, chargement, erreur } = useAppelOffreStatut(id)
+  const { appelOffre, chargement, erreur, refetch } = useAppelOffreStatut(id)
   const [relanceEnCours, setRelanceEnCours] = useState(false)
+  const [transfertWrikeEnCours, setTransfertWrikeEnCours] = useState(false)
 
   async function reessayerAnalyse() {
     setRelanceEnCours(true)
     await supabase.functions.invoke('analyze-rfp', { body: { appel_offre_id: id } })
     setRelanceEnCours(false)
+  }
+
+  async function transfererVersWrike() {
+    if (!window.confirm("Transférer cet appel d'offres vers Wrike ? Un nouveau projet sera créé dans Wrike."))
+      return
+
+    setTransfertWrikeEnCours(true)
+    await supabase.functions.invoke('transfer-to-wrike', { body: { appel_offre_id: id } })
+    await refetch()
+    setTransfertWrikeEnCours(false)
   }
 
   return (
@@ -63,6 +74,39 @@ export default function DetailPage() {
               <SectionResume appelOffre={appelOffre} />
               <SectionClausesLegales appelOffre={appelOffre} />
               <SectionRecommandation appelOffre={appelOffre} />
+
+              <section className="section-detail card">
+                <h3>Transfert vers Wrike</h3>
+                <p>
+                  Après lecture de l'analyse ci-dessus, décide si cet appel d'offres mérite d'être suivi
+                  dans Wrike. Le transfert n'est jamais déclenché automatiquement.
+                </p>
+
+                <ErrorBanner message={appelOffre.wrike_erreur_message} />
+
+                {appelOffre.wrike_statut === 'transfere' ? (
+                  <p>
+                    Déjà transféré vers Wrike
+                    {appelOffre.wrike_url && (
+                      <>
+                        {' — '}
+                        <a href={appelOffre.wrike_url} target="_blank" rel="noreferrer">
+                          voir le projet
+                        </a>
+                      </>
+                    )}
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={transfererVersWrike}
+                    disabled={transfertWrikeEnCours}
+                  >
+                    {transfertWrikeEnCours ? <Spinner /> : 'Transférer vers Wrike'}
+                  </button>
+                )}
+              </section>
             </>
           )}
         </>
