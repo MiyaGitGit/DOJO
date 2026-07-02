@@ -126,7 +126,7 @@ async function effectuerAnalyse(
       // L'analyse exhaustive des 13 catégories de clauses légales (5 champs chacune)
       // dépasse régulièrement 4096 tokens en sortie ; coupait l'analyse en cours de génération.
       max_tokens: 8192,
-      system: SYSTEM_PROMPT,
+      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
       tools: [ANALYSE_TOOL],
       tool_choice: { type: 'tool', name: ANALYSE_TOOL.name },
       messages: [
