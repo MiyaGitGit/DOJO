@@ -11,3 +11,6 @@ dist/
 # Système
 .DS_Store
 Thumbs.db
+
+# Netlify CLI (métadonnées locales de liaison au projet)
+.netlify/
