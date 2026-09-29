@@ -24,26 +24,17 @@ export function useAppelOffreStatut(id) {
   }, [id])
 
   useEffect(() => {
-    let intervalId
-    let annule = false
+    charger()
+  }, [charger])
 
-    async function poll() {
-      const data = await charger()
-      if (annule || !data) return
+  // Le polling suit le statut : il reprend dès qu'une relance repasse l'AO en cours d'analyse.
+  const enCours = appelOffre !== null && !STATUTS_TERMINAUX.includes(appelOffre.statut)
 
-      if (STATUTS_TERMINAUX.includes(data.statut) && intervalId) {
-        clearInterval(intervalId)
-      }
-    }
-
-    poll()
-    intervalId = setInterval(poll, INTERVALLE_POLLING_MS)
-
-    return () => {
-      annule = true
-      clearInterval(intervalId)
-    }
-  }, [id, charger])
+  useEffect(() => {
+    if (!enCours) return
+    const intervalId = setInterval(charger, INTERVALLE_POLLING_MS)
+    return () => clearInterval(intervalId)
+  }, [enCours, charger])
 
   return { appelOffre, chargement, erreur, refetch: charger }
 }

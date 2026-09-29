@@ -19,6 +19,7 @@ export default function DetailPage() {
   async function reessayerAnalyse() {
     setRelanceEnCours(true)
     await supabase.functions.invoke('analyze-rfp', { body: { appel_offre_id: id } })
+    await refetch()
     setRelanceEnCours(false)
   }
 
