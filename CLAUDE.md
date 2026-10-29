@@ -16,32 +16,49 @@ DOJO est le chantier d'automatisation de l'analyse des appels d'offres (AO) publ
 
 ## Statut actuel
 
-**Phase 1 complétée** : une application web (Supabase + Edge Function Claude) qui digitalise
-l'analyse d'un AO déposé en PDF — pertinence, résumé, clauses légales, recommandation — avec
-historique consultable. Voir [`app/README.md`](app/README.md) pour l'architecture technique et la
-mise en place.
+Feuille de route en versions (DOJO v1, v2, v3), présentée à l'Équipe IA de Miyagi le 2026-10-28
+(source : plan du programme Projets IA, version d'équipe du 2026-10-26). Projet classé priorité
+haute ; responsable : Julien ; contributeurs : Pascale, Kim Lascelles.
 
-**Phase 2 en cours** : connexion au formulaire Miyagi — transfert des données de l'AO vers Wrike,
-déclenché manuellement par un humain après lecture de l'analyse (bouton "Transférer vers Wrike" sur
-le dashboard et la page de détail). Le code est en place
-(`app/supabase/migrations/0002_wrike_transfer.sql`,
-`app/supabase/functions/transfer-to-wrike/`), mais l'appel réel à l'API Wrike attend des
-prérequis côté Miyagi : token API, ID du Blueprint AO, mapping des champs personnalisés (à obtenir
-via Martine Tessier).
+**DOJO v1 (en production)** : une application web (Supabase + Edge Function Claude) qui
+digitalise l'analyse d'un AO déposé en PDF — pertinence, résumé, clauses légales, recommandation —
+avec historique consultable. Voir [`app/README.md`](app/README.md) pour l'architecture technique et
+la mise en place.
 
-Phases futures (hors scope actuel) :
-- **Phase 3** : génération assistée d'une ébauche de réponse, connectée à la bibliothèque de
-  documents Miyagi (profils, projets similaires, CV des consultants) déjà présente dans le Drive
-  Miyagi
-- **Phase 4** : génération automatique d'offres de services à partir de l'analyse des rapports
-  issus du formulaire client et du profil du client
+**DOJO v2** : rédaction d'ébauches d'offres de services (ODS) et de réponses aux AO. Analyse la
+transcription d'un appel de prise de besoin (ou un document d'AO) et rédige une ébauche d'ODS (ou
+de réponse à l'AO). Sources : transcription d'appel, en plus du formulaire Miyagi et du profil
+client ; bibliothèque de documents Miyagi (profils, projets similaires, CV des consultants) dans
+le Drive Miyagi.
 
-*Note de cohérence : l'idée d'automatiser le déclencheur de transfert (décider seul qu'un AO est
-assez pertinent pour être transféré, sans relecture humaine) avait été envisagée comme « Phase 2 »
-avant l'adoption de la feuille de route actuelle (4 phases). Elle n'est plus une phase numérotée —
-la Phase 2 garde une décision humaine obligatoire, conformément à la décision du 2026-06-18 de
-conserver le déclenchement manuel. Si cette automatisation redevient pertinente un jour, ce sera un
-raffinement de la Phase 1 (qualification), pas une phase à part.*
+**DOJO v3** : portail des demandes de formation. Collecter, centraliser et traiter les demandes
+de formation et les documents de contenus, analyser les besoins, générer automatiquement des
+chartes, devis sommaires et estimations d'efforts. D'abord pour les employés et gestionnaires de
+Miyagi (interne), puis éventuellement pour des clients externes ; à terme, offre envisagée en mode
+SaaS.
+
+Jalons (2026-2027, « S2 » = 2e semaine du mois) :
+
+| Jalon | Livrable |
+|---|---|
+| Novembre 2026, S2 | Portée et stratégie de développement |
+| Novembre 2026, S4 | Présentation de l'architecture (flux) |
+| Décembre 2026, S4 | Prototype DOJO v2 |
+| Janvier 2027, S4 | Déploiement DOJO v2 ; stratégie DOJO v3 |
+| Février 2027, S4 | Prototype DOJO v3 |
+| Mars 2027, S4 | Déploiement DOJO v3 |
+
+**Transfert vers Wrike (dépriorisé)** : transfert manuel des données de l'AO vers Wrike, déclenché
+par un humain après lecture de l'analyse (bouton "Transférer vers Wrike"). Le code est en place
+(`app/supabase/migrations/0002_wrike_transfer.sql`, `app/supabase/functions/transfer-to-wrike/`,
+désignés « Phase 2 » dans les commentaires du code, selon l'ancienne numérotation), mais jamais
+configuré : il attend un token API, l'ID du Blueprint AO et le mapping des champs personnalisés.
+Absent de la feuille de route actuelle.
+
+*Note de cohérence : l'ancienne feuille de route comptait 4 phases (1 analyse des AO, 2 transfert
+Wrike, 3 ébauches de réponses aux AO, 4 offres de services). Les phases 3 et 4 sont regroupées dans
+DOJO v2. L'idée d'automatiser le déclencheur de transfert vers Wrike (sans relecture humaine)
+reste écartée, conformément à la décision du 2026-06-18 de conserver le déclenchement manuel.*
 
 ## Origine et migration prévue vers DANIELSAN
 
